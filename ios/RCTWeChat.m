@@ -285,15 +285,19 @@ RCT_EXPORT_METHOD(shareToSession:(NSDictionary *)data
 - (void)shareToWeixinWithData:(NSDictionary *)aData scene:(int)aScene callback:(RCTResponseSenderBlock)aCallBack
 {
     NSString *imageUrl = aData[RCTWXShareTypeThumbImageUrl];
-    // if (imageUrl.length && _bridge.imageLoader) {
-    if (imageUrl.length) {
+    if (imageUrl.length && _bridge.imageLoader) {
+    // if (imageUrl.length) {
         NSLog(imageUrl);
-        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
-        // NSURLRequest *imageRequest = [NSURLRequest requestWithURL:aData[RCTWXShareTypeThumbImageUrl]];
-        // [_bridge.imageLoader loadImageWithURLRequest:imageRequest size:CGSizeMake(100, 100) scale:1 clipped:FALSE resizeMode:RCTResizeModeStretch progressBlock:nil completionBlock:^(NSError *error, UIImage *image) {
-        //     [self shareToWeixinWithData:aData thumbImage:image scene:aScene callBack:aCallBack];
-        // }];
-        [self shareToWeixinWithData:aData thumbImage:image scene:aScene callBack:aCallBack];
+         UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
+        UIGraphicsBeginImageContext(CGSizeMake(100, 100));
+        [image drawInRect:CGRectMake(0,0,100,100)];
+        UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+//        NSURLRequest *imageRequest = [NSURLRequest requestWithURL:aData[RCTWXShareTypeThumbImageUrl]];
+//        [_bridge.imageLoader loadImageWithURLRequest:imageRequest size:CGSizeMake(100, 100) scale:1 clipped:FALSE resizeMode:RCTResizeModeStretch progressBlock:nil completionBlock:^(NSError *error, UIImage *image) {
+//            [self shareToWeixinWithData:aData thumbImage:image scene:aScene callBack:aCallBack];
+//        }];
+         [self shareToWeixinWithData:aData thumbImage:newImage scene:aScene callBack:aCallBack];
     } else {
         [self shareToWeixinWithData:aData thumbImage:nil scene:aScene callBack:aCallBack];
     }
